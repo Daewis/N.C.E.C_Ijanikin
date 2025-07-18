@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Attendance Management</title> <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <style>
+  
+
+
+  </style>
+  </head>
+<body>
+  <header class="container-fluid bg-light py-3 border-bottom">
+    <div class="d-flex justify-content-between align-items-center">
+      <h3 class="mb-0 text-primary">Attendance System</h3> <button id="logout-btn" class="btn btn-outline-danger">Logout</button>
+    </div>
+  </header>
+
+  <main class="container mt-5"> <div class="row justify-content-center">
+      <div class="col-lg-8 col-md-10">
+        <h1 class="text-center mb-4 text-primary">Mark Attendance</h1> <div class="card shadow-sm"> <div class="card-body">
+            <form id="attendance-form" name="attendanceForm" class="mt-2"> <div class="mb-3">
+                <label for="service_id" class="form-label">Select Service</label>
+                <select class="form-control" id="service_id" name="service_id" required aria-label="Select a service for attendance">
+                  <option value="" disabled selected>Loading services...</option> </select>
+                <div id="service_id_help" class="form-text">Please select the service you are marking attendance for.</div>
+              </div>
+              
+              <button type="submit" class="btn btn-primary w-100">Mark Attendance</button> </form>
+          </div>
+        </div>
+
+        <div id="message-area" class="mt-4">
+          </div>
+
+        
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="attendance2.js"></script>
+</body>
+</html>

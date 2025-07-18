@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Attendance Management</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <style>
+    /* Global Body Styling - Adapted for full page content */
+    body {
+        min-height: 100vh;
+        margin: 0;
+        padding: 0;
+        font-family: 'Segoe UI', Arial, sans-serif;
+        background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
+    }
+
+    /* Customizing Bootstrap Primary Text Color */
+    .text-primary {
+        color: #4e54c8 !important; /* Your desired primary color */
+    }
+
+    /* Customizing Bootstrap Primary Button */
+    .btn-primary {
+        padding: 0.85rem;
+        background: linear-gradient(90deg, #4e54c8 0%, #8f94fb 100%);
+        color: #fff;
+        border: none;
+        font-size: 1.1rem;
+        font-weight: 600;
+        letter-spacing: 1px;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        transition: background 0.3s ease, transform 0.1s ease, box-shadow 0.2s ease;
+    }
+    .btn-primary:hover {
+        background: linear-gradient(90deg, #8f94fb 0%, #4e54c8 100%);
+        transform: translateY(-1px);
+        box-shadow: 0 2px 8px rgba(78, 84, 200, 0.3);
+        color: #fff;
+    }
+    .btn-primary:active {
+        background: linear-gradient(90deg, #4e54c8 0%, #8f94fb 100%);
+        transform: translateY(0);
+        box-shadow: none;
+    }
+    .btn-primary:focus {
+        box-shadow: 0 0 0 0.25rem rgba(78, 84, 200, 0.25);
+        outline: none;
+    }
+
+    /* Styling for the Logout Button - Now Purple */
+    #logout-btn {
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        transition: all 0.3s ease;
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        cursor: pointer; /* Ensure cursor is pointer */
+        
+        /* Initial state: Outline Purple */
+        background: transparent;
+        color: #6A0DAD; /* A darker purple for the text */
+        border: 1px solid #6A0DAD; /* Matching purple border */
+    }
+
+    #logout-btn:hover {
+        background: linear-gradient(90deg, #6A0DAD 0%, #A020F0 100%); /* Purple gradient on hover */
+        color: #fff; /* White text on hover */
+        border-color: #A020F0; /* Match border to end of gradient */
+        transform: translateY(-1px); /* Slight lift on hover */
+        box-shadow: 0 2px 8px rgba(106, 13, 173, 0.3); /* Subtle shadow based on purple */
+    }
+    #logout-btn:active {
+        background: linear-gradient(90deg, #6A0DAD 0%, #A020F0 100%);
+        transform: translateY(0);
+        box-shadow: none;
+    }
+    #logout-btn:focus {
+        box-shadow: 0 0 0 0.25rem rgba(106, 13, 173, 0.25); /* Custom focus ring for purple */
+        outline: none;
+    }
+
+
+    /* Card Styling */
+    .card {
+        border: none;
+        border-radius: 0.75rem;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.06), 0 1.5px 6px rgba(0,0,0,0.03);
+    }
+
+    /* Form Control Styling (inputs, selects) */
+    .form-control {
+        border-radius: 0.5rem;
+        border: 1px solid #ddd;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .form-control:focus {
+        border-color: #4e54c8;
+        box-shadow: 0 0 0 0.25rem rgba(78, 84, 200, 0.25);
+        outline: none;
+    }
+
+    /* Labels */
+    label.form-label {
+        font-weight: 500;
+        color: #555;
+    }
+
+    /* Header specific styling */
+    header {
+        background: linear-gradient(90deg, #f0f2f7 0%, #e0eafc 100%);
+        border-bottom: 1px solid rgba(0,0,0,0.05);
+        padding: 0.75rem 1rem;
+    }
+    header .h3 {
+        font-weight: 700;
+        letter-spacing: 0.5px;
+    }
+  </style>
+</head>
+<body>
+  <header class="container-fluid bg-light py-3 border-bottom">
+    <div class="d-flex justify-content-between align-items-center">
+      <h3 class="mb-0 text-primary">Attendance System</h3>
+      <button id="logout-btn" class="btn btn-outline-danger">Logout</button>
+    </div>
+  </header>
+
+  <main class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-lg-8 col-md-10">
+        <h1 class="text-center mb-4 text-primary">Mark Attendance</h1>
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <form id="attendance-form" name="attendanceForm" class="mt-2">
+              <div class="mb-3">
+                <label for="service_id" class="form-label">Select Service</label>
+                <select class="form-control" id="service_id" name="service_id" required aria-label="Select a service for attendance">
+                  <option value="" disabled selected>Loading services...</option>
+                </select>
+                <div id="service_id_help" class="form-text">Please select the service you are marking attendance for.</div>
+              </div>
+              
+              <button type="submit" class="btn btn-primary w-100">Mark Attendance</button>
+            </form>
+          </div>
+        </div>
+
+        <div id="message-area" class="mt-4">
+          </div>
+
+      </div>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="attendance2.js"></script>
+</body>
+</html>
