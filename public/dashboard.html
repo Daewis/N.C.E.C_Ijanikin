@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet"/>
+  <style>
+    /* ... (your existing CSS remains here) ... */
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
+      min-height: 100vh;
+    }
+    .sidebar {
+      min-height: 100vh;
+      background: #4e54c8;
+      color: #fff;
+      padding-top: 2rem;
+      box-shadow: 2px 0 12px rgba(0,0,0,0.05);
+    }
+    .sidebar .nav-link {
+      color: #fff;
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+      border-radius: 0.5rem;
+      transition: background 0.2s;
+    }
+    .sidebar .nav-link.active, .sidebar .nav-link:hover {
+      background: linear-gradient(90deg, #8f94fb 0%, #4e54c8 100%);
+      color: #fff;
+    }
+    .sidebar .bi {
+      margin-right: 0.75rem;
+      font-size: 1.3rem;
+      vertical-align: -0.2em;
+    }
+    .navbar {
+      background: #4e54c8 !important;
+    }
+    .navbar-brand {
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+    .main-content {
+      padding: 2rem 2rem 2rem 2rem;
+    }
+    .card {
+      border-radius: 1rem;
+      box-shadow: 0 4px 32px rgba(0,0,0,0.08), 0 1.5px 6px rgba(0,0,0,0.04);
+      transition: transform 0.2s;
+    }
+    .card:hover {
+      transform: scale(1.01);
+    }
+    .logout-btn {
+      border-radius: 0.5rem;
+      font-weight: 500;
+      letter-spacing: 1px;
+      background: linear-gradient(90deg, #8f94fb 0%, #4e54c8 100%);
+      border: none;
+      color: #fff;
+      padding: 0.5rem 1.5rem;
+      margin-left: 1rem;
+      transition: background 0.2s;
+    }
+    .logout-btn:hover {
+      background: linear-gradient(90deg, #4e54c8 0%, #8f94fb 100%);
+    }
+    @media (max-width: 991px) {
+      .sidebar {
+        min-height: auto;
+        padding-top: 1rem;
+      }
+      .main-content {
+        padding: 1rem;
+      }
+    }
+    /* Custom style for the centered image */
+    .centered-logo {
+      display: block; /* Make it a block element to allow margin auto for centering */
+      margin-left: auto;
+      margin-right: auto;
+      max-width: 500px; /* Max width you specified */
+      width: 100%; /* Ensure it's responsive */
+      opacity: 0.7;
+      padding: 20px 0; /* Add some vertical padding */
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark shadow-sm">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Admin Dashboard</a>
+      <div class="ms-auto d-flex align-items-center">
+        <span class="text-white me-3" id="loggedInUser"></span>
+        <button id="logoutBtn" class="logout-btn">Logout</button>
+      </div>
+    </div>
+  </nav>
+  <div class="container-fluid">
+    <div class="row">
+      <nav class="col-lg-2 col-md-3 sidebar d-flex flex-column align-items-start">
+        <a class="nav-link active" href="#" data-section="welcome"><i class="bi bi-house-door"></i>Dashboard</a>
+        <a class="nav-link" href="#" data-section="members"><i class="bi bi-people"></i>Members</a>
+        <a class="nav-link" href="#" data-section="services"><i class="bi bi-calendar-event"></i>Services</a>
+        <a class="nav-link" href="#" data-section="attendance"><i class="bi bi-clipboard-data"></i>Attendance</a>
+        <a class="nav-link" href="#" data-section="add-service"><i class="bi bi-plus-circle"></i>Add Service</a>
+        <a class="nav-link" href="#" data-section="admin-registration" id="adminRegNav" style="display:none;"><i class="bi bi-person-plus"></i>Register Admin</a>
+      </nav>
+      <main class="col-lg-10 col-md-9 main-content">
+        <div id="dashboard-content">
+          <div id="welcome-section" class="text-center">
+            <h2 class="mb-3" id="admin-welcome-text">Welcome, Admin</h2>
+            <p class="text-muted">Select an option from the menu to manage the church attendance system.</p>
+            <img src="/N.C.E.C_Logo.png" alt="N.C.E.C_Logo.png" class="centered-logo">
+          </div>
+
+          <div id="members-section" style="display: none;">
+            <h3 class="mb-4">Church Members</h3>
+            <div class="table-responsive">
+              <table class="table table-bordered table-striped" id="membersTable">
+                <thead id="membersTableHead"></thead>
+                <tbody id="membersTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div id="services-section" style="display: none;">
+            <h3 class="mb-4">Church Services</h3>
+            <div class="table-responsive">
+              <table class="table table-bordered table-striped" id="servicesTable">
+                <thead id="servicesTableHead"></thead>
+                <tbody id="servicesTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div id="attendance-section" style="display: none;">
+            <h3 class="mb-4">Attendance Records</h3>
+            <div class="table-responsive">
+              <table class="table table-bordered table-striped" id="attendanceTable">
+                <thead id="attendanceTableHead"></thead>
+                <tbody id="attendanceTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div id="add-service-section" class="row justify-content-center" style="display: none;">
+            <div class="col-md-8 col-lg-6">
+              <div class="card border-info">
+                <div class="card-body">
+                  <h5 class="card-title text-center mb-4">Add New Service</h5>
+                  <form id="addServiceForm">
+                    <div class="mb-3">
+                      <label for="service_name" class="form-label">Service Name</label>
+                      <input type="text" id="service_name" class="form-control" placeholder="e.g., Sunday Worship" required>
+                    </div>
+                    <div class="mb-3">
+                      <label for="service_location" class="form-label">Location</label>
+                      <input type="text" id="service_location" class="form-control" placeholder="e.g., Main Sanctuary" required>
+                    </div>
+                    <div class="row mb-3">
+                      <div class="col-md-6">
+                        <label for="start_time" class="form-label">Start Time</label>
+                        <input type="time" id="start_time" class="form-control" required>
+                      </div>
+                      <div class="col-md-6">
+                        <label for="end_time" class="form-label">End Time</label>
+                        <input type="time" id="end_time" class="form-control" required>
+                      </div>
+                    </div>
+                    <div class="mb-3">
+                      <label for="time_of_day" class="form-label">Time of Day</label>
+                      <input type="text" id="time_of_day" class="form-control" placeholder="e.g., Morning, Evening" required>
+                    </div>
+                    <div class="mb-4">
+                      <label for="service_date" class="form-label">Service Date</label>
+                      <input type="date" id="service_date" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn-info w-100">Add Service</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="admin-registration-section" class="row justify-content-center" style="display: none;">
+            <div class="col-md-8 col-lg-6">
+              <div class="card border-danger">
+                <div class="card-body">
+                  <h5 class="card-title text-center mb-4">Register New Admin</h5>
+                  <form id="admin-registration-form">
+                    <div class="mb-3">
+                      <label for="newAdminUsername" class="form-label">Username</label>
+                      <input type="text" id="newAdminUsername" class="form-control" placeholder="Enter new admin username" required>
+                    </div>
+                    <div class="mb-4">
+                      <label for="newAdminPassword" class="form-label">Password</label>
+                      <input type="password" id="newAdminPassword" class="form-control" placeholder="Enter new admin password" required>
+                    </div>
+                    <button type="submit" class="btn btn-danger w-100">Register Admin</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </main>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="admin-dashboard.js"></script>
+   </body>
+</html>
