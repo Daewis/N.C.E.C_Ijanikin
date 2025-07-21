@@ -29,3 +29,4 @@ async function createSuperadmin() {
 }
 
 createSuperadmin();
+

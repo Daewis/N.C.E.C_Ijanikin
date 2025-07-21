@@ -85,6 +85,41 @@ router.post('/login', async (req, res) => {
   }
 });
 
+// --- New route for searching members (PostgreSQL version) ---
+router.get('/search', async (req, res) => {
+    try {
+        const query = req.query.query; // Get the search query from the URL
+        if (!query) {
+            return res.status(400).json({ message: 'Search query is required.' });
+        }
+
+        // Use ILIKE for case-insensitive pattern matching in PostgreSQL
+        // % is a wildcard character
+        const searchQuery = `%${query}%`;
+
+        // SQL query to search across multiple fields
+        // Be careful with SQL injection! Using parameterized queries is crucial.
+        const sqlQuery = `
+            SELECT * FROM members
+            WHERE
+                first_name ILIKE $1 OR
+                last_name ILIKE $1 OR
+                username ILIKE $1 OR
+                email ILIKE $1 OR
+                phone_number ILIKE $1
+            LIMIT 50; -- Limit results for performance
+        `;
+
+        const { rows } = await pool.query(sqlQuery, [searchQuery]);
+
+        res.status(200).json(rows); // Send the found members back as JSON
+    } catch (error) {
+        console.error('Error searching members:', error);
+        res.status(500).json({ message: 'Internal server error during search.' });
+    }
+});
+
+
 
 
 export default router;

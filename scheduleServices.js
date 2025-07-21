@@ -1,3 +1,4 @@
+import cron from 'node-cron';
 import { pool } from './db.js';
 import recurringServices from './recurringServices.js';
 
@@ -5,12 +6,11 @@ function getNextDateOfWeek(dayOfWeek) {
   const today = new Date();
   const resultDate = new Date(today);
   let daysUntil = (dayOfWeek - today.getDay() + 7) % 7;
-  // If today is the target day, use today (not next week)
   resultDate.setDate(today.getDate() + daysUntil);
   return resultDate.toISOString().slice(0, 10);
 }
 
-async function updateServiceDates() {
+export async function updateServiceDates() {
   for (const svc of recurringServices) {
     const service_date = getNextDateOfWeek(svc.day_of_week);
     try {
@@ -36,7 +36,12 @@ async function updateServiceDates() {
       console.error(`Error updating ${svc.service_name}:`, err.message);
     }
   }
-  await pool.end();
 }
 
-updateServiceDates();
+// Schedule job to run at 12:00 AM every Sunday (weekly)
+cron.schedule('0 0 * * 0', async () => {
+  console.log('Running weekly service date update...');
+  await updateServiceDates();
+}, {
+  timezone: "Africa/Lagos" // Or your local timezone
+});
