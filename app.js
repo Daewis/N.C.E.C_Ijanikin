@@ -11,7 +11,7 @@ import authRoutes from './routes/auth.js';
 import path from 'path';
 import { fileURLToPath } from 'url';  
 import cors from 'cors';
-import './cronScheduler.js';
+import './scheduleServices.js';
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -25,11 +25,10 @@ const app = express();
 // Middleware to parse JSON bodies
 app.use(express.json());
 
-// Serve static files
-app.use(express.static(path.join(__dirname, 'public')));
-
 app.use(cors());
 
+// Serve static files
+app.use(express.static(path.join(__dirname, 'public')));
 
 
 const PgSession = pgSession(session);
@@ -56,6 +55,11 @@ app.use('/superadmin', superadminRoutes);
 app.use('/admin', adminRoutes);
 app.use('/auth', authRoutes);
 
+
+// Route root to home.html
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'home.html'));
+});
 
 app.get('/dashboard.html', (req, res) => {
   if (!req.session.superadmin && !req.session.admin) return res.redirect('/admin_login.html');

@@ -38,8 +38,8 @@ export async function updateServiceDates() {
   }
 }
 
-// Schedule job to run at 12:00 AM every Sunday (weekly)
-cron.schedule('0 0 * * 0', async () => {
+// Schedule job to run at 12:01 AM every Sunday (weekly)
+cron.schedule('1 0 * 7 0', async () => {
   console.log('Running weekly service date update...');
   await updateServiceDates();
 }, {
