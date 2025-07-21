@@ -66,6 +66,12 @@ app.get('/dashboard.html', (req, res) => {
   res.sendFile(path.join(process.cwd(), 'public', 'dashboard.html'));
 });
 
+app.get('/run-weekly-update', async (req, res) => {
+  if (req.query.secret !== process.env.CRON_SECRET) return res.sendStatus(403);
+  await updateServiceDates();
+  res.send('Service dates updated');
+});
+
 
 //login route
 /*app.post('/login', async (req, res) => {

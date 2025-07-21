@@ -50,10 +50,4 @@ router.post('/add', async (req, res) => {
   }
 });
 
-router.get('/run-weekly-update', async (req, res) => {
-  if (req.query.secret !== process.env.CRON_SECRET) return res.sendStatus(403);
-  await updateServiceDates();
-  res.send('Service dates updated');
-});
-
 export default router;
