@@ -11,6 +11,7 @@ import authRoutes from './routes/auth.js';
 import path from 'path';
 import { fileURLToPath } from 'url';  
 import cors from 'cors';
+import './cronScheduler.js';
 
 
 const __filename = fileURLToPath(import.meta.url);

@@ -1,5 +1,6 @@
 import express from 'express';
 import { pool } from '../db.js';
+import { updateServiceDates } from '../scheduleServices.js';
 
 const router = express.Router();
 
@@ -47,6 +48,12 @@ router.post('/add', async (req, res) => {
     console.error('Add service error:', err);
     res.status(500).json({ message: 'Server error' });
   }
+});
+
+router.get('/run-weekly-update', async (req, res) => {
+  if (req.query.secret !== process.env.CRON_SECRET) return res.sendStatus(403);
+  await updateServiceDates();
+  res.send('Service dates updated');
 });
 
 export default router;
