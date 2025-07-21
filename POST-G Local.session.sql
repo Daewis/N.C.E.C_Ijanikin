@@ -1,1 +1,1 @@
-delete * from attendance
+-- delete * from attendance
