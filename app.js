@@ -12,6 +12,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';  
 import cors from 'cors';
 import './scheduleServices.js';
+import { updateServiceDates } from './scheduleServices.js';
 
 
 const __filename = fileURLToPath(import.meta.url);
