@@ -1,42 +1,18 @@
-/*import { Pool } from 'pg';
 
-const pool = new Pool({
-    user: 'postgres',
-    host: 'localhost',
-    database: 'Attendance_System',
-    password: 'Abokunwa20',
-    port: 5432, 
-});
+import pg from 'pg';
 
-pool.query('SELECT NOW()', (err, res) => {
-  if (err) {
-    console.error('Database connection error:', err);
-  } else {
-    console.log('Database connected:', res.rows);
-  }
-});
-export { pool };
-**/
+const { Pool } = pg;
 
-
-
-
-// db.js (or similar file where you set up your db connection)
-
-
-import { Pool } from 'pg';
-
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL, // <-- This is crucial!
-  ssl: {
-    rejectUnauthorized: false // Render requires SSL, this setting helps with self-signed certs etc.
-  }
+// This line needs to be 'export const'
+export const pool = new Pool({ // <-- ADD 'export' here
+  connectionString: process.env.DATABASE_URL,
+  ssl: { rejectUnauthorized: false }
 });
 
 // Optional: Basic error handling for the pool
 pool.on('error', (err) => {
   console.error('Unexpected error on idle client', err);
-  process.exit(-1); // Exit process if unhandled client error
+  process.exit(-1);
 });
 
 console.log('PostgreSQL Pool initialized for Render.');
