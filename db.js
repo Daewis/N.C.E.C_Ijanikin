@@ -24,9 +24,9 @@ export { pool };
 // db.js (or similar file where you set up your db connection)
 
 
-const { Pool } = pg;
+import { Pool } from 'pg';
 
-export const pool = new Pool({
+const pool = new Pool({
   connectionString: process.env.DATABASE_URL, // <-- This is crucial!
   ssl: {
     rejectUnauthorized: false // Render requires SSL, this setting helps with self-signed certs etc.
