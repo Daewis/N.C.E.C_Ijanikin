@@ -32,7 +32,7 @@ export async function updateServiceDates() {
 
       // Only update if current date has passed
       if (currentServiceDate < today) {
-        const newDate = getNextDateOfWeekFrom(today, svc.day_of_week);
+        const newDate = getNextDateOfWeek(today, svc.day_of_week);
 
         await pool.query(
           `UPDATE services
