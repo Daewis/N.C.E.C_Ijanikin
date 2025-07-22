@@ -70,6 +70,7 @@ app.get('/dashboard.html', (req, res) => {
 app.get('/run-weekly-update', async (req, res) => {
   if (req.query.secret !== process.env.CRON_SECRET) return res.sendStatus(403);
   await updateServiceDates();
+  console.log("fun ran........")
   res.send('Service dates updated');
 });
 

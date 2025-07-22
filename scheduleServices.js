@@ -11,6 +11,7 @@ function getNextDateOfWeek(dayOfWeek) {
 }
 
 export async function updateServiceDates() {
+  console.log("ran.......")
   for (const svc of recurringServices) {
     const service_date = getNextDateOfWeek(svc.day_of_week);
     try {

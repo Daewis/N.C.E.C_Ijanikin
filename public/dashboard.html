@@ -91,6 +91,22 @@
     .member-search-input {
       margin-bottom: 1.5rem;
     }
+.chart-container {
+    position: relative; /* Needed for responsive charts */
+    width: 100%;        /* Make it fill its parent */
+    max-width: 800px;   /* Or whatever maximum width you desire */
+    height: 400px;      /* Set a fixed height */
+    /* You can also use max-height if you want it to scale up to a certain point */
+    margin: auto;       /* Center the chart container */
+}
+
+/* If you need more control over the canvas itself, though usually container is enough */
+#attendanceChart {
+    /* If responsive:true and maintainAspectRatio:false, these may not be strictly necessary */
+    /* but can serve as fallbacks or for specific layout needs. */
+    width: 100% !important; /* Ensure canvas takes full width of its container */
+    height: 100% !important; /* Ensure canvas takes full height of its container */
+}
   </style>
 </head>
 <body>
@@ -227,8 +243,12 @@
                   <div id="editMemberDetails" style="display: none;">
                     <input type="hidden" id="memberIdToEdit">
                     <div class="mb-3">
-                      <label for="editMemberName" class="form-label">Name</label>
-                      <input type="text" id="editMemberName" class="form-control" required>
+                      <label for="editMemberfirstName" class="form-label">FirstName</label>
+                      <input type="text" id="editMemberfirstName" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                      <label for="editMemberlastName" class="form-label">LastName</label>
+                      <input type="text" id="editMemberlastName" class="form-control" required>
                     </div>
                     <div class="mb-3">
                       <label for="editMemberEmail" class="form-label">Email</label>
@@ -293,10 +313,12 @@
                     <button type="button" id="generateAttendanceReportBtn" class="btn btn-info">Generate Report</button>
                   </div>
                 </form>
-                <div id="attendanceReportDisplay" class="mt-4" style="display: none;">
-                  <h5>Attendance Summary:</h5>
-                  <div id="attendanceSummaryText"></div>
-                  <canvas id="attendanceChart" width="400" height="200"></canvas>
+                <div id="attendanceReportDisplay" style="display: none;">
+                  <h4>Attendance Summary for <span id="memberNameForAttendanceReport"></span> in <span id="attendanceReportYearDisplay"></span></h4>
+                   <p id="attendanceSummaryText"></p>
+               <div class="chart-container" style="position: relative; height: 400px; width: 80%;">
+                   <canvas id="attendanceChart"></canvas>
+               </div>
                 </div>
               </div>
             </div>

@@ -264,14 +264,14 @@ document.addEventListener('DOMContentLoaded', async () => {
           const li = document.createElement('li');
           li.className = 'list-group-item list-group-item-action';
           li.textContent = `${member.first_name} ${member.last_name} (${member.username})`;
-          li.dataset.memberId = member._id; // Store member ID
+          li.dataset.memberId = member.member_id; // Store member ID
           li.dataset.memberName = `${member.first_name} ${member.last_name}`; // Store full name
           // Store all member data for convenience
           li.dataset.memberData = JSON.stringify(member);
 
           li.addEventListener('click', () => {
             const selectedMember = JSON.parse(li.dataset.memberData);
-            document.getElementById(memberIdInputId).value = selectedMember._id;
+            document.getElementById(memberIdInputId).value = selectedMember.member_id;
             if (memberNameDisplayId) {
               document.getElementById(memberNameDisplayId).textContent = selectedMember.first_name + ' ' + selectedMember.last_name;
             }
@@ -297,7 +297,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   const editMemberSearchResults = document.getElementById('editMemberSearchResults');
   const editMemberDetails = document.getElementById('editMemberDetails');
   const memberIdToEdit = document.getElementById('memberIdToEdit');
-  const editMemberName = document.getElementById('editMemberName');
+  const editMemberfirstName = document.getElementById('editMemberfirstName');
+  const editMemberlastName = document.getElementById('editMemberlastName');
   const editMemberEmail = document.getElementById('editMemberEmail');
   const editMemberPhone = document.getElementById('editMemberPhone');
   const editMemberForm = document.getElementById('editMemberForm');
@@ -311,10 +312,10 @@ document.addEventListener('DOMContentLoaded', async () => {
       null, // No separate name display needed, form fields will be populated
       (member) => {
         // Callback when a member is selected for editing
-        editMemberName.value = `${member.first_name} ${member.last_name}`; // Combine first and last name for ease
+        editMemberfirstName.value = member.first_name || ''; 
+        editMemberlastName.value = member.last_name || '';
         editMemberEmail.value = member.email || '';
         editMemberPhone.value = member.phone_number || '';
-        // You might want to break apart member.first_name and member.last_name if your backend expects separate fields
       }
     );
   }
@@ -329,13 +330,13 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
 
       // Assuming your backend expects first_name and last_name separately
-      const nameParts = editMemberName.value.split(' ');
+     /* const nameParts = editMemberName.value.split(' ');
       const firstName = nameParts[0];
-      const lastName = nameParts.slice(1).join(' ') || '';
+      const lastName = nameParts.slice(1).join(' ') || '';**/
 
       const updatedData = {
-        first_name: firstName,
-        last_name: lastName,
+        first_name: editMemberfirstName.value,
+        last_name: editMemberlastName.value,
         email: editMemberEmail.value,
         phone_number: editMemberPhone.value
       };
@@ -462,10 +463,59 @@ document.addEventListener('DOMContentLoaded', async () => {
       (member) => {
         // Callback when a member is selected for attendance report
         attendanceReportDisplay.style.display = 'none'; // Hide previous report
+        // Destroy existing chart if it exists
         if (attendanceChartInstance) {
-          attendanceChartInstance.destroy(); // Destroy previous chart
-          attendanceChartInstance = null;
+          attendanceChartInstance.destroy();
         }
+
+        attendanceChartInstance = new Chart(attendanceChartCanvas, {
+          type: 'bar',
+          data: {
+            labels: labels,
+            datasets: [{
+              label: `Services Attended in ${year}`,
+              data: data,
+              backgroundColor: 'rgba(78, 84, 200, 0.6)',
+              borderColor: 'rgba(78, 84, 200, 1)',
+              borderWidth: 1
+            }]
+          },
+          options: {
+            responsive: true,
+            // --- MODIFICATIONS HERE ---
+            maintainAspectRatio: false, // Keep this as false if you want custom height control
+            // aspectRatio: 2, // You could set a custom aspect ratio if maintainAspectRatio is true
+            // --- End MODIFICATIONS ---
+            scales: {
+              y: {
+                beginAtZero: true,
+                title: {
+                  display: true,
+                  text: 'Number of Services Attended'
+                },
+                // Optional: Set a max value for y-axis if data varies widely
+                // max: 10, // Example: If attendance rarely exceeds 10 per month
+              },
+              x: {
+                title: {
+                  display: true,
+                  text: 'Month'
+                }
+              }
+            },
+            plugins: {
+              legend: {
+                display: true,
+                position: 'top',
+              },
+              title: {
+                display: true,
+                text: `${memberNameForAttendanceReport.textContent}'s Attendance in ${year}`
+              }
+            }
+          }
+        });
+
       }
     );
   }

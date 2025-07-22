@@ -78,4 +78,49 @@ router.get('/all', async (_req, res) => {
   }
 });*/
 
+// --- NEW ROUTE: GET ATTENDANCE FOR A SPECIFIC MEMBER BY ID AND YEAR ---
+router.get('/member/:id', async (req, res) => {
+    try {
+        const memberId = req.params.id; // Get member ID from URL parameter (e.g., '42')
+        const year = req.query.year;   // Get year from query parameter (e.g., '?year=2024')
+
+        // Basic validation
+        if (!memberId || !year) {
+            return res.status(400).json({ message: 'Member ID and Year are required.' });
+        }
+
+        // Validate year format if necessary (e.g., ensure it's a 4-digit number)
+        if (isNaN(parseInt(year)) || year.length !== 4) {
+            return res.status(400).json({ message: 'Invalid year format. Please provide a 4-digit year.' });
+        }
+
+        // SQL query to fetch attendance records for a specific member within a given year
+        // We'll use EXTRACT(YEAR FROM attendance_date) for PostgreSQL
+        const sqlQuery = `
+            SELECT         
+                member_id,
+                service_id,
+                specific_time,
+                attendance_date
+            FROM
+                attendance
+            WHERE
+                member_id = $1 AND
+                EXTRACT(YEAR FROM attendance_date) = $2;
+        `;
+
+        const { rows } = await pool.query(sqlQuery, [memberId, year]);
+
+        // You might consider adding logic here to also fetch the total number of services
+        // for that year if you want to calculate a precise attendance percentage on the backend
+        // and send it along with the attendance records.
+        // For now, we'll just send the raw attendance records.
+        res.status(200).json(rows); // Send the attendance records back as JSON
+    } catch (error) {
+        console.error('Error fetching member attendance:', error);
+        res.status(500).json({ message: 'Internal server error fetching attendance.' });
+    }
+});
+
+
 export default router;

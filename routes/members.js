@@ -119,6 +119,76 @@ router.get('/search', async (req, res) => {
     }
 });
 
+// --- NEW ROUTE: UPDATE MEMBER DETAILS (PUT /members/:id) ---
+router.put('/:id', async (req, res) => {
+    const memberId = req.params.id; // Get ID from URL parameter
+    const { first_name, last_name, email, phone_number } = req.body; // Get updated data from request body
+
+    // Basic validation
+    if (!first_name || !last_name) { // Assuming these are mandatory
+        return res.status(400).json({ message: 'First name and Last name are required.' });
+    }
+
+    try {
+        const result = await pool.query(
+            `UPDATE members
+             SET
+                 first_name = $1,
+                 last_name = $2,
+                 email = $3,
+                 phone_number = $4
+             WHERE
+                 member_id = $5
+             RETURNING *;`, // RETURNING * to get the updated row
+            [first_name, last_name, email, phone_number, memberId]
+        );
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ message: 'Member not found.' });
+        }
+
+        res.status(200).json({ message: 'Member updated successfully!', member: result.rows[0] });
+    } catch (error) {
+        console.error('Error updating member:', error);
+        res.status(500).json({ message: 'Failed to update member due to server error.' });
+    }
+});
+
+// --- NEW ROUTE: RESET MEMBER PASSWORD (PUT /members/:id/reset-password) ---
+router.put('/:id/reset-password', async (req, res) => {
+    const memberId = req.params.id; // Get member ID from URL parameter
+    const { newPassword } = req.body; // Get new password from request body
+
+    // Basic validation for new password
+    if (!newPassword || newPassword.length < 6) { // Example: password must be at least 6 chars
+        return res.status(400).json({ message: 'New password is required and must be at least 6 characters long.' });
+    }
+
+    try {
+        // Hash the new password
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+        // Update the member's password in the database
+        const result = await pool.query(
+            `UPDATE members
+             SET
+                 password = $1
+             WHERE
+                 member_id = $2
+             RETURNING member_id;`, // Only return member_id for confirmation
+            [hashedPassword, memberId]
+        );
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ message: 'Member not found.' });
+        }
+
+        res.status(200).json({ message: 'Member password reset successfully!' });
+    } catch (error) {
+        console.error('Error resetting member password:', error);
+        res.status(500).json({ message: 'Failed to reset password due to server error.' });
+    }
+});
 
 
 
