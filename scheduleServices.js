@@ -1,30 +1,39 @@
-
 import { pool } from './db.js';
 import recurringServices from './recurringServices.js';
 
 function getNextDateOfWeek(dayOfWeek) {
+  // Debugging the input and internal logic of getNextDateOfWeek
+  console.log(`[DEBUG - getNextDateOfWeek] Called with dayOfWeek: ${dayOfWeek}`);
   const today = new Date();
-  const resultDate = new Date(today); // Start with today's date
+  console.log(`[DEBUG - getNextDateOfWeek] Internal 'today' date: ${today.toISOString()}`);
+
+  const resultDate = new Date(today);
+  if (isNaN(resultDate.getTime())) {
+      console.error(`[DEBUG - getNextDateOfWeek] ERROR: resultDate is Invalid Date at function start.`);
+      return null; // Return null to indicate failure
+  }
 
   const currentDay = today.getDay(); // 0 (Sunday) to 6 (Saturday)
 
   let daysUntil;
-
-  // Calculate days until the desired day of the week
-  // If the desired day is today or in the past for this week, add 7 days to get to next week
   if (dayOfWeek <= currentDay) {
     daysUntil = (dayOfWeek - currentDay + 7);
   } else {
     daysUntil = (dayOfWeek - currentDay);
   }
 
-  // Adjust for the case where today is the desired day, and you want next week
-  if (daysUntil === 0) { // This means today is the dayOfWeek, and we want next week's
+  if (daysUntil === 0) {
       daysUntil = 7;
   }
 
-
   resultDate.setDate(today.getDate() + daysUntil);
+  console.log(`[DEBUG - getNextDateOfWeek] Calculated resultDate before toISOString: ${resultDate.toISOString()}`);
+
+  if (isNaN(resultDate.getTime())) {
+      console.error(`[DEBUG - getNextDateOfWeek] ERROR: resultDate became Invalid Date before toISOString!`);
+      return null;
+  }
+
   return resultDate.toISOString().slice(0, 10);
 }
 
@@ -44,13 +53,31 @@ export async function updateServiceDates() {
         continue;
       }
 
-      const currentServiceDate = new Date(result.rows[0].service_date);
+      const dbServiceDateRaw = result.rows[0].service_date; // Capture the raw value from DB
+      console.log(`[DEBUG - updateServiceDates] Raw DB date for "${svc.service_name}":`, dbServiceDateRaw, `(Type: ${typeof dbServiceDateRaw})`);
+
+      const currentServiceDate = new Date(dbServiceDateRaw); // Parse DB date
+
+      // Check if currentServiceDate is a valid date
+      if (isNaN(currentServiceDate.getTime())) {
+          console.error(`[DEBUG - updateServiceDates] ERROR: currentServiceDate is Invalid Date for "${svc.service_name}" from DB value: "${dbServiceDateRaw}"! Skipping update.`);
+          continue; // Skip this service if the date from the DB is invalid
+      }
+
       const today = new Date();
       today.setHours(0, 0, 0, 0);
 
       // Only update if current date has passed
       if (currentServiceDate < today) {
-        const newDate = getNextDateOfWeek(today, svc.day_of_week);
+        console.log(`[DEBUG - updateServiceDates] "${svc.service_name}" (on ${currentServiceDate.toISOString().slice(0,10)}) is older than today, attempting to update.`);
+
+        // Corrected call to getNextDateOfWeek based on its definition
+        const newDate = getNextDateOfWeek(svc.day_of_week); // <-- ONLY PASS ONE ARGUMENT: svc.day_of_week
+
+        if (newDate === null) { // Handle if getNextDateOfWeek returns null due to error
+            console.error(`[DEBUG - updateServiceDates] Skipping update for "${svc.service_name}" due to invalid new date calculation.`);
+            continue;
+        }
 
         await pool.query(
           `UPDATE services
@@ -72,7 +99,7 @@ export async function updateServiceDates() {
 
         console.log(`Updated "${svc.service_name}" to ${newDate}`);
       } else {
-        console.log(`"${svc.service_name}" is already up to date.`);
+        console.log(`[DEBUG - updateServiceDates] "${svc.service_name}" (on ${currentServiceDate.toISOString().slice(0,10)}) is already up to date.`);
       }
 
     } catch (err) {
@@ -80,5 +107,3 @@ export async function updateServiceDates() {
     }
   }
 }
-
-
