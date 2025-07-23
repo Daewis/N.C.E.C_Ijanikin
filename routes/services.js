@@ -50,4 +50,27 @@ router.post('/add', async (req, res) => {
   }
 });
 
+
+// This endpoint should be secured!
+// You can use a secret key in the request header or body.
+router.post('/run-update-service-dates', async (req, res) => {
+  // IMPORTANT: Implement a strong security check here!
+  // Example: Check for a secret API key in the request body or headers.
+  const CRON_SECRET_KEY = process.env.CRON_SECRET_KEY; // Store this securely in your environment variables
+  if (!req.headers['x-cron-secret'] || req.headers['x-cron-secret'] !== CRON_SECRET_KEY) {
+    console.warn('Unauthorized attempt to run service date updater.');
+    return res.status(403).json({ message: 'Forbidden: Invalid secret key' });
+  }
+
+  try {
+    console.log('Online cron job triggered: Running service date updater...');
+    await updateServiceDates();
+    console.log('Service dates update completed by online cron job.');
+    res.status(200).json({ message: 'Service dates updated successfully.' });
+  } catch (err) {
+    console.error('Error running service date updater via cron endpoint:', err);
+    res.status(500).json({ message: 'Error updating service dates.' });
+  }
+});
+
 export default router;

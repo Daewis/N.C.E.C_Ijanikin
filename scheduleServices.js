@@ -1,4 +1,4 @@
-import cron from 'node-cron';
+
 import { pool } from './db.js';
 import recurringServices from './recurringServices.js';
 
@@ -82,10 +82,3 @@ export async function updateServiceDates() {
 }
 
 
-// Schedule job to run at 12:01 AM every Sunday (weekly)
-/* cron.schedule('1 0 * 7 0', async () => {
-  console.log('Running weekly service date update...');
-  await updateServiceDates();
-}, {
-  timezone: "Africa/Lagos" // Or your local timezone
-});*/
