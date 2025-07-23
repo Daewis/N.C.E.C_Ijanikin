@@ -25,7 +25,7 @@ const recurringServices = [
     service_location: 'New Creature Ijanikin'
   },
   {
-    service_name: 'Wednesday Service - Miracle and Deliverance Service',
+    service_name: 'Wednesday Service - Hours of Miracle and Deliverance Service',
     day_of_week: 3, // Wednesday
     start_time: '10:00:00',
     end_time: '11:00:00',
@@ -33,7 +33,7 @@ const recurringServices = [
     service_location: 'New Creature Ijanikin'
   },
   {
-    service_name: 'Wednesday Service - Miracle and Deliverance Service',
+    service_name: 'Wednesday Service - Hours of Miracle and Deliverance Service',
     day_of_week: 3, // Wednesday
     start_time: '17:00:00',
     end_time: '18:00:00',
@@ -73,7 +73,7 @@ const recurringServices = [
     service_location: 'Campground'
   },
   {
-    service_name: 'Saturday Service - Workers Meeting',
+    service_name: 'Saturday Service -Workers Meeting',
     day_of_week: 6, // Saturday
     start_time: '16:00:00',
     end_time: '17:00:00',
