@@ -24,18 +24,18 @@ const recurringServices = [
     time_of_day: 'Afternoon',
     service_location: 'New Creature Ijanikin'
   },
-  {
-    // CORRECTED: Removed "Hours of ". Make sure this EXACTLY matches your DB.
-    service_name: 'Wednesday Service - Miracle and Deliverance Service',
+   {
+    // CORRECTED: Removed the extra ' Service' at the end to match DB exactly
+    service_name: 'Wednesday Service - Hours of Miracle and Deliverance', // <-- Change this line!
     day_of_week: 3, // Wednesday
     start_time: '10:00:00',
     end_time: '11:00:00',
     time_of_day: 'Morning',
     service_location: 'New Creature Ijanikin'
   },
-  {
-    // CORRECTED: Removed "Hours of ". Make sure this EXACTLY matches your DB.
-    service_name: 'Wednesday Service - Miracle and Deliverance Service',
+   {
+    // CORRECTED: Removed the extra ' Service' at the end to match DB exactly
+    service_name: 'Wednesday Service - Hours of Miracle and Deliverance', // <-- Change this line!
     day_of_week: 3, // Wednesday
     start_time: '17:00:00',
     end_time: '18:00:00',
@@ -75,15 +75,14 @@ const recurringServices = [
     service_location: 'Campground'
   },
   {
-    // CORRECTED: Added space after hyphen. Make sure this EXACTLY matches your DB.
-    service_name: 'Saturday Service - Workers Meeting',
+    // NO CHANGE NEEDED: This now perfectly matches your DB
+    service_name: 'Saturday Service -Workers Meeting',
     day_of_week: 6, // Saturday
     start_time: '16:00:00',
     end_time: '17:00:00',
     time_of_day: 'Evening',
     service_location: 'New Creature Ijanikin'
   },
-
 ];
 
 export default recurringServices;
