@@ -4,8 +4,26 @@ import recurringServices from './recurringServices.js';
 
 function getNextDateOfWeek(dayOfWeek) {
   const today = new Date();
-  const resultDate = new Date(today);
-  let daysUntil = (dayOfWeek - today.getDay() + 7) % 7;
+  const resultDate = new Date(today); // Start with today's date
+
+  const currentDay = today.getDay(); // 0 (Sunday) to 6 (Saturday)
+
+  let daysUntil;
+
+  // Calculate days until the desired day of the week
+  // If the desired day is today or in the past for this week, add 7 days to get to next week
+  if (dayOfWeek <= currentDay) {
+    daysUntil = (dayOfWeek - currentDay + 7);
+  } else {
+    daysUntil = (dayOfWeek - currentDay);
+  }
+
+  // Adjust for the case where today is the desired day, and you want next week
+  if (daysUntil === 0) { // This means today is the dayOfWeek, and we want next week's
+      daysUntil = 7;
+  }
+
+
   resultDate.setDate(today.getDate() + daysUntil);
   return resultDate.toISOString().slice(0, 10);
 }
