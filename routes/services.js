@@ -53,7 +53,7 @@ router.post('/add', async (req, res) => {
 
 // This endpoint should be secured!
 // You can use a secret key in the request header or body.
-router.post('/run-update-service-dates', async (req, res) => {
+router.post('/api/services/run-update-service-dates', async (req, res) => {
   // IMPORTANT: Implement a strong security check here!
   // Example: Check for a secret API key in the request body or headers.
   const CRON_SECRET_KEY = process.env.CRON_SECRET_KEY; // Store this securely in your environment variables
